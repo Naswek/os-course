@@ -1,0 +1,80 @@
+Linux os-intro 6.12.111+deb13-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.12.111-1 (2026-09-28) x86_64 GNU/Linux
+Architecture:                            x86_64
+CPU op-mode(s):                          32-bit, 64-bit
+Address sizes:                           48 bits physical, 48 bits virtual
+Byte Order:                              Little Endian
+CPU(s):                                  1
+On-line CPU(s) list:                     0
+Vendor ID:                               AuthenticAMD
+Model name:                              AMD Ryzen 7 8845HS w/ Radeon 780M Graphics
+CPU family:                              25
+Model:                                   117
+Thread(s) per core:                      1
+Core(s) per socket:                      1
+Socket(s):                               1
+Stepping:                                2
+BogoMIPS:                                7585,74
+Flags:                                   fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt rdtscp lm constant_tsc rep_good nopl xtopology nonstop_tsc cpuid extd_apicid tsc_known_freq pni pclmulqdq monitor ssse3 fma cx16 sse4_1 sse4_2 x2apic movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cr8_legacy abm sse4a misalignsse 3dnowprefetch ibpb vmmcall fsgsbase bmi1 avx2 bmi2 invpcid rdseed adx clflushopt sha_ni arat flush_l1d
+Hypervisor vendor:                       KVM
+Virtualization type:                     full
+L1d cache:                               32 KiB (1 instance)
+L1i cache:                               32 KiB (1 instance)
+L2 cache:                                1 MiB (1 instance)
+L3 cache:                                16 MiB (1 instance)
+NUMA node(s):                            1
+NUMA node0 CPU(s):                       0
+Vulnerability Gather data sampling:      Not affected
+Vulnerability Indirect target selection: Not affected
+Vulnerability Itlb multihit:             Not affected
+Vulnerability L1tf:                      Not affected
+Vulnerability Mds:                       Not affected
+Vulnerability Meltdown:                  Not affected
+Vulnerability Mmio stale data:           Not affected
+Vulnerability Reg file data sampling:    Not affected
+Vulnerability Retbleed:                  Not affected
+Vulnerability Spec rstack overflow:      Vulnerable: Safe RET, no microcode
+Vulnerability Spec store bypass:         Not affected
+Vulnerability Spectre v1:                Mitigation; usercopy/swapgs barriers and __user pointer sanitization
+Vulnerability Spectre v2:                Mitigation; Retpolines; IBPB conditional; STIBP disabled; RSB filling; PBRSB-eIBRS Not affected; BHI Not affected
+Vulnerability Srbds:                     Not affected
+Vulnerability Tsa:                       Vulnerable: Clear CPU buffers attempted, no microcode
+Vulnerability Tsx async abort:           Not affected
+Vulnerability Vmscape:                   Not affected
+CPU NODE SOCKET CORE L1d:L1i:L2:L3 ONLINE
+  0    0      0    0 0:0:0:0          yes
+cache size	: 1024 KB
+cache_alignment	: 64
+               total        used        free      shared  buff/cache   available
+Mem:           6,4Gi       360Mi       6,1Gi       592Ki       151Mi       6,0Gi
+Swap:          752Mi          0B       752Mi
+1
+1
+H/W path            Device      Class       Description
+=======================================================
+/0/0                            memory      128KiB BIOS
+/0/1                            memory      6784MiB System memory
+/0/100/1.1/0.0.0    /dev/cdrom  disk        CD-ROM
+/0/100/1.1/0.0.0/0  /dev/cdrom  disk        
+/0/100/d/0.0.0      /dev/sda    disk        7295MB VBOX HARDDISK
+smartctl 7.4 2023-08-01 r5530 [x86_64-linux-6.12.111+deb13-amd64] (local build)
+Copyright (C) 2002-23, Bruce Allen, Christian Franke, www.smartmontools.org
+
+=== START OF INFORMATION SECTION ===
+Device Model:     VBOX HARDDISK
+Serial Number:    VBbe25c149-4542b01f
+Firmware Version: 1.0
+User Capacity:    7 295 422 464 bytes [7,29 GB]
+Sector Size:      512 bytes logical/physical
+Device is:        Not in smartctl database 7.3/5528
+ATA Version is:   ATA/ATAPI-6 published, ANSI INCITS 361-2002
+Local Time is:    Sat Oct  3 21:34:58 2026 MSK
+SMART support is: Unavailable - device lacks SMART capability.
+
+A mandatory SMART command failed: exiting. To continue, add one or more '-T permissive' options.
+available: 1 nodes (0)
+node 0 cpus: 0
+node 0 size: 6518 MB
+node 0 free: 6072 MB
+node distances:
+node     0 
+   0:   10 
