@@ -1,0 +1,309 @@
+
+то, что на хосте:
+
+посмотрим, какие ядрышка свободные +-
+
+╭─⋆｡°✩ naswek ❯ ~ ·························································································································· 23:14
+╰─❯ mpstat -P ALL 1 5
+Average:     CPU    %usr   %nice    %sys %iowait    %irq   %soft  %steal  %guest  %gnice   %idle
+Average:     all    2.56    0.00    0.70    0.00    0.25    0.10    0.00    0.00    0.08   96.31
+Average:       0    2.66    0.00    0.66    0.00    1.00    0.33    0.00    0.00    1.33   94.02
+Average:       1    0.33    0.00    0.00    0.00    0.00    0.66    0.00    0.00    0.00   99.00
+Average:       2    1.98    0.00    0.66    0.00    0.00    0.00    0.00    0.00    0.00   97.36
+Average:       3    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00    0.00  100.00
+Average:       4    3.53    0.00    1.60    0.00    0.96    0.32    0.00    0.00    0.00   93.59
+Average:       5    1.32    0.00    0.33    0.00    0.33    0.00    0.00    0.00    0.00   98.01
+Average:       6    5.94    0.00    1.32    0.00    0.00    0.00    0.00    0.00    0.00   92.74
+Average:       7    4.32    0.00    1.00    0.00    0.33    0.00    0.00    0.00    0.00   94.35
+Average:       8    2.64    0.00    0.99    0.00    0.00    0.00    0.00    0.00    0.00   96.37
+Average:       9    0.66    0.00    0.33    0.00    0.33    0.00    0.00    0.00    0.00   98.68
+Average:      10    5.54    0.00    0.98    0.00    0.33    0.33    0.00    0.00    0.00   92.83
+Average:      11    2.64    0.00    0.66    0.00    0.00    0.00    0.00    0.00    0.00   96.70
+Average:      12    4.65    0.00    0.66    0.00    0.00    0.00    0.00    0.00    0.00   94.68
+Average:      13    0.66    0.00    0.33    0.00    0.00    0.00    0.00    0.00    0.00   99.01
+Average:      14    3.26    0.00    1.30    0.00    0.33    0.00    0.00    0.00    0.00   95.11
+Average:      15    0.66    0.00    0.33    0.00    0.33    0.00    0.00    0.00    0.00   98.68
+
+
+поскольоку два логических ядра сидят на одно физическом, норм пары будут на 2 и 3 лог ядре, то на 1 физическом, поставим все на 3 физ ядро, она самое свободное
+
+
+
+ставим taskset для процесса вм
+
+╭─⋆｡°✩ naswek ❯ ~ ·························································································································· 22:28
+╰─❯ pgrep -af VirtualBoxVM
+11158 /usr/lib/virtualbox/VirtualBoxVM --comment os-intro --startvm d80f27b0-5271-4e7a-8e68-3b78eb6b2ecb --no-startvm-errormsgbox
+
+╭─⋆｡°✩ naswek ❯ ~ ·························································································································· 22:29
+╰─❯ sudo taskset -cp 3 11158
+[sudo] password for naswek: 
+pid 11158's current affinity list: 0
+pid 11158's new affinity list: 3
+
+
+
+cpupower -с 3 frequency-info :
+
+analyzing CPU 3:
+  driver: amd-pstate-epp
+  CPUs which run at the same hardware frequency: 3
+  CPUs which need to have their frequency coordinated by software: 3
+  energy performance preference: performance
+  hardware limits: 419 MHz - 3.80 GHz
+  available cpufreq governors: performance powersave
+  current policy: frequency should be within 1.10 GHz and 3.80 GHz.
+                  The governor "performance" may decide which speed to use
+                  within this range.
+  current CPU frequency: Unable to call hardware
+  current CPU frequency: 3.77 GHz (asserted by call to kernel)
+  boost state support:
+    Supported: yes
+    Active: yes
+  amd-pstate limits:
+    Highest Performance: 196. Maximum Frequency: 5.14 GHz.
+    Nominal Performance: 145. Nominal Frequency: 3.80 GHz.
+    Lowest Non-linear Performance: 42. Lowest Non-linear Frequency: 1.10 GHz.
+    Lowest Performance: 16. Lowest Frequency: 400 MHz.
+    Preferred Core Support: 1. Preferred Core Ranking: 196.
+
+
+╭─⋆｡°✩ naswek ❯ ~ ·························································································································· 22:29
+╰─❯ sudo cpupower frequency-set -g performance
+Setting cpu: 3
+
+
+после performance:
+
+╰─❯ cpupower -с 3 frequency-info
+analyzing CPU 3:
+  driver: amd-pstate-epp
+  CPUs which run at the same hardware frequency: 0
+  CPUs which need to have their frequency coordinated by software: 0
+  energy performance preference: performance
+  hardware limits: 419 MHz - 5.14 GHz
+  available cpufreq governors: performance powersave
+  current policy: frequency should be within 1.10 GHz and 5.14 GHz.
+                  The governor "performance" may decide which speed to use
+                  within this range.
+  current CPU frequency: Unable to call hardware
+  current CPU frequency: 3.26 GHz (asserted by call to kernel)
+  boost state support:
+    Supported: yes
+    Active: yes
+  amd-pstate limits:
+    Highest Performance: 196. Maximum Frequency: 5.14 GHz.
+    Nominal Performance: 145. Nominal Frequency: 3.80 GHz.
+    Lowest Non-linear Performance: 42. Lowest Non-linear Frequency: 1.10 GHz.
+    Lowest Performance: 16. Lowest Frequency: 400 MHz.
+    Preferred Core Support: 1. Preferred Core Ranking: 202.
+
+
+
+по поводу буста, у меня ток такие файлы:
+╭─⋆｡°✩ naswek ❯ ~ ·························································································································· 22:32
+╰─❯ ls /sys/devices/system/cpu/amd_pstate/
+dynamic_epp  prefcore  status
+
+╭─⋆｡°✩ naswek ❯ ~ ·························································································································· 22:35
+╰─❯ bat /sys/devices/system/cpu/amd_pstate/dynamic_epp
+─────┬────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+     │ File: /sys/devices/system/cpu/amd_pstate/dynamic_epp
+─────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ disabled
+─────┴────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+╭─⋆｡°✩ naswek ❯ ~ ·························································································································· 22:36
+╰─❯ bat /sys/devices/system/cpu/amd_pstate/prefcore 
+─────┬────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+     │ File: /sys/devices/system/cpu/amd_pstate/prefcore
+─────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ enabled
+─────┴────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+╭─⋆｡°✩ naswek ❯ ~ ·························································································································· 22:36
+╰─❯ bat /sys/devices/system/cpu/amd_pstate/status
+─────┬────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+     │ File: /sys/devices/system/cpu/amd_pstate/status
+─────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ active
+─────┴────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+
+
+dynamic_app -- управление динамиечским изменением EPp -- energy performance preference, те предполчтение между проивзодительность. и проивзодительность.
+prefcore -- вкл/выкл preferred core. некоторые ядра на амд типа "более удачные" и могут пропихивать и буститься больше остальных. те планировщик будет отправлять однопточные задачи именон туда, но это нам не грозит, тк taskset уже забиндил всю ВМ на одно ядро 
+status -- текущий режим работы драйвера amd_pstate (масштабирование частоты процессоров в линуксах)
+
+
+╭─⋆｡°✩ naswek ❯ ~ ·························································································································· 22:54
+╰─❯ bat /sys/devices/system/cpu/cpufreq/boost 
+─────┬────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+     │ File: /sys/devices/system/cpu/cpufreq/boost
+─────┼────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+   1 │ 1
+─────┴────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────
+
+а тут жуе буст есть, выставим на 0 и...
+
+╭─⋆｡°✩ naswek ❯ ~ ·························································································································· 22:56
+╰─❯ cpupower -c 3 frequency-info
+analyzing CPU 3:
+  driver: amd-pstate-epp
+  CPUs which run at the same hardware frequency: 0
+  CPUs which need to have their frequency coordinated by software: 0
+  energy performance preference: performance
+  hardware limits: 419 MHz - 3.80 GHz
+  available cpufreq governors: performance powersave
+  current policy: frequency should be within 1.10 GHz and 3.80 GHz.
+                  The governor "performance" may decide which speed to use
+                  within this range.
+  current CPU frequency: Unable to call hardware
+  current CPU frequency: 3.77 GHz (asserted by call to kernel)
+  boost state support:
+    Supported: yes
+    Active: no
+  amd-pstate limits:
+    Highest Performance: 196. Maximum Frequency: 5.14 GHz.
+    Nominal Performance: 145. Nominal Frequency: 3.80 GHz.
+    Lowest Non-linear Performance: 42. Lowest Non-linear Frequency: 1.10 GHz.
+    Lowest Performance: 16. Lowest Frequency: 400 MHz.
+    Preferred Core Support: 1. Preferred Core Ranking: 196.
+
+
+побэда
+
+taskset скипнем, поскольку мы закрепляем ВМ за ядром в данном случае, а не прогу, а сама ВМ знаеттольок одно ядро, поэтому можн скинуть этот моментик
+
+ноооо, поскольку я биндил уже посл запуска ВМ, надо глянуть на дочерние потоки, тк оказывается, на них такссет не распространился...
+
+╭─⋆｡°✩ naswek ❯ ~ ·························································································································· 23:02
+╰─❯ for tid in /proc/11158/task/*
+        taskset -cp (basename $tid)
+    end
+pid 11158's current affinity list: 3
+pid 11163's current affinity list: 0-15
+pid 11164's current affinity list: 0-15
+pid 11166's current affinity list: 0-15
+pid 11167's current affinity list: 0-15
+pid 11168's current affinity list: 0-15
+pid 11169's current affinity list: 0-15
+pid 11170's current affinity list: 0-15
+pid 11171's current affinity list: 0-15
+pid 11173's current affinity list: 0-15
+pid 11177's current affinity list: 0-15
+pid 11187's current affinity list: 0-15
+pid 11188's current affinity list: 0-15
+pid 11190's current affinity list: 0-15
+pid 11191's current affinity list: 0-15
+pid 11192's current affinity list: 0-15
+pid 11193's current affinity list: 0-15
+pid 11194's current affinity list: 0-15
+pid 11195's current affinity list: 0-15
+pid 11196's current affinity list: 0-15
+pid 11197's current affinity list: 0-15
+pid 11198's current affinity list: 0-15
+pid 11199's current affinity list: 0-15
+pid 11200's current affinity list: 0-15
+pid 11201's current affinity list: 0-15
+pid 11202's current affinity list: 0-15
+pid 11203's current affinity list: 0-15
+pid 11204's current affinity list: 0-15
+pid 11205's current affinity list: 0-15
+pid 11206's current affinity list: 0-15
+pid 11207's current affinity list: 0-15
+pid 11217's current affinity list: 0-15
+pid 11221's current affinity list: 0-15
+pid 11222's current affinity list: 0-15
+
+короче, биндин все это на 3 кор
+
+╭─⋆｡°✩ naswek ❯ ~ ·························································································································· 23:09
+╰─❯ for tid in /proc/11158/task/*
+        sudo taskset -cp 3 (basename $tid)
+    end
+[sudo] password for naswek: 
+pid 11158's current affinity list: 3
+pid 11158's new affinity list: 3
+pid 11163's current affinity list: 0-15
+pid 11163's new affinity list: 3
+pid 11164's current affinity list: 0-15
+pid 11164's new affinity list: 3
+pid 11166's current affinity list: 0-15
+pid 11166's new affinity list: 3
+pid 11167's current affinity list: 0-15
+pid 11167's new affinity list: 3
+pid 11168's current affinity list: 0-15
+pid 11168's new affinity list: 3
+pid 11169's current affinity list: 0-15
+pid 11169's new affinity list: 3
+pid 11170's current affinity list: 0-15
+pid 11170's new affinity list: 3
+pid 11171's current affinity list: 0-15
+pid 11171's new affinity list: 3
+pid 11173's current affinity list: 0-15
+pid 11173's new affinity list: 3
+pid 11177's current affinity list: 0-15
+pid 11177's new affinity list: 3
+pid 11187's current affinity list: 0-15
+pid 11187's new affinity list: 3
+pid 11188's current affinity list: 0-15
+pid 11188's new affinity list: 3
+pid 11190's current affinity list: 0-15
+pid 11190's new affinity list: 3
+pid 11191's current affinity list: 0-15
+pid 11191's new affinity list: 3
+pid 11192's current affinity list: 0-15
+pid 11192's new affinity list: 3
+pid 11193's current affinity list: 0-15
+pid 11193's new affinity list: 3
+pid 11194's current affinity list: 0-15
+pid 11194's new affinity list: 3
+pid 11195's current affinity list: 0-15
+pid 11195's new affinity list: 3
+pid 11196's current affinity list: 0-15
+pid 11196's new affinity list: 3
+pid 11197's current affinity list: 0-15
+pid 11197's new affinity list: 3
+pid 11198's current affinity list: 0-15
+pid 11198's new affinity list: 3
+pid 11199's current affinity list: 0-15
+pid 11199's new affinity list: 3
+pid 11200's current affinity list: 0-15
+pid 11200's new affinity list: 3
+pid 11201's current affinity list: 0-15
+pid 11201's new affinity list: 3
+pid 11202's current affinity list: 0-15
+pid 11202's new affinity list: 3
+pid 11203's current affinity list: 0-15
+pid 11203's new affinity list: 3
+pid 11204's current affinity list: 0-15
+pid 11204's new affinity list: 3
+pid 11205's current affinity list: 0-15
+pid 11205's new affinity list: 3
+pid 11206's current affinity list: 0-15
+pid 11206's new affinity list: 3
+pid 11207's current affinity list: 0-15
+pid 11207's new affinity list: 3
+pid 11221's current affinity list: 0-15
+pid 11221's new affinity list: 3
+pid 11222's current affinity list: 0-15
+pid 11222's new affinity list: 3
+pid 26726's current affinity list: 0-15
+pid 26726's new affinity list: 3
+
+все, теперь фулл ВМ работает на бедном 3-ем ядре
+
+╭─⋆｡°✩ naswek ❯ ~ ·························································································································· 23:28
+╰─❯ sudo renice -n -5 -p 11158
+11158 (process ID) old priority 0, new priority -5
+
+опять же, выставляем приоритет для вм
+
+кэши скипаем, вариант no-cache
+
+оапциональное не делаю, боюсь сломать арч)) был бы никсос, то запросто
+
+в вм:
+эммм, пока ничего
+
