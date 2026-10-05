@@ -1,0 +1,42 @@
+Iteration 1/1 (read): traversing graph-seq.bin ... OK (436905 nodes processed)
+
+ Performance counter stats for './out/graph_traverse_mmap --no-cache 1 graph-seq.bin':
+
+              5,82 msec task-clock                       #    0,487 CPUs utilized             
+                 1      context-switches                 #  171,718 /sec                      
+                 0      cpu-migrations                   #    0,000 /sec                      
+               221      page-faults                      #   37,950 K/sec                     
+   <not supported>      cycles                                                                
+   <not supported>      instructions                                                          
+   <not supported>      branches                                                              
+   <not supported>      branch-misses                                                         
+
+       0,011960324 seconds time elapsed
+
+       0,006709000 seconds user
+       0,000000000 seconds sys
+
+
+Iteration 1/1 (read): traversing graph-seq.bin ... OK (436905 nodes processed)
+% time     seconds  usecs/call     calls    errors syscall
+------ ----------- ----------- --------- --------- ----------------
+  0,00    0,000000           0         1           read
+  0,00    0,000000           0         2           write
+  0,00    0,000000           0         3           close
+  0,00    0,000000           0         3           fstat
+  0,00    0,000000           0         9           mmap
+  0,00    0,000000           0         3           mprotect
+  0,00    0,000000           0         2           munmap
+  0,00    0,000000           0         1           brk
+  0,00    0,000000           0         2           pread64
+  0,00    0,000000           0         1         1 access
+  0,00    0,000000           0         2           madvise
+  0,00    0,000000           0         1           execve
+  0,00    0,000000           0         1           arch_prctl
+  0,00    0,000000           0         1           set_tid_address
+  0,00    0,000000           0         3           openat
+  0,00    0,000000           0         1           set_robust_list
+  0,00    0,000000           0         1           prlimit64
+  0,00    0,000000           0         1           rseq
+------ ----------- ----------- --------- --------- ----------------
+100,00    0,000000           0        38         1 total
